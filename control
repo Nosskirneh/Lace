@@ -1,0 +1,9 @@
+Package: se.nosskirneh.lace
+Name: Lace
+Depends: mobilesubstrate
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: 'NCObey' / 'Leash' for iOS 10
+Maintainer: Andreas Henriksson
+Author: Andreas Henriksson
+Section: Tweaks
