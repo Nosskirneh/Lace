@@ -1,4 +1,5 @@
 #import <Preferences/Preferences.h>
+
 #define prefPath [NSString stringWithFormat:@"%@/Library/Preferences/%@", NSHomeDirectory(), @"se.nosskirneh.lace.plist"]
 #define LaceColor [UIColor colorWithRed:0.73 green:0.06 blue:0.58 alpha:1.0]
 
