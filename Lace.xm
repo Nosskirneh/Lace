@@ -1,6 +1,5 @@
 @interface SBApplication : NSObject
 - (NSString *)displayIdentifier;
-- (BOOL)isSpringBoard;
 @end
 
 @interface SpringBoard : UIApplication
@@ -17,8 +16,7 @@
 @end
 
 @interface SBNotificationCenterViewController : UIViewController
-- (double)_currentDragPosition;
-@property (nonatomic,readonly) SBUIChevronView * grabberView;
+@property (nonatomic,readonly) SBUIChevronView *grabberView;
 @end
 
 @interface NCNotificationChronologicalList : NSObject
@@ -32,7 +30,7 @@
 @end
 
 
-#define prefPath [NSString stringWithFormat:@"%@/Library/Preferences/%@", NSHomeDirectory(),@"se.nosskirneh.lace.plist"]
+#define prefPath [NSString stringWithFormat:@"%@/Library/Preferences/%@", NSHomeDirectory(), @"se.nosskirneh.lace.plist"]
 
 static NSDictionary *preferences;
 static SBPagedScrollView *pagedScrollView;
@@ -40,8 +38,6 @@ static NCNotificationChronologicalList *notificationList;
 static SBSearchEtceteraLayoutView *searchLayoutView;
 static SPUINavigationBar *searchNavBar;
 static CGRect orgSearchLayoutViewFrame;
-
-static BOOL shouldNotEditAlpha;
 
 
 void updateSettings(CFNotificationCenterRef center,
@@ -56,7 +52,6 @@ void updateSettings(CFNotificationCenterRef center,
 
 - (void)setState:(long long)state {
     if (![preferences[@"enabled"] boolValue] || ![preferences[@"CustomChevronIconEnabled"] boolValue] || !preferences[@"CustomChevronIcon"]) {
-        HBLogDebug(@"Not enabled / didn't find value");
         return %orig;
     }
 
@@ -83,7 +78,6 @@ void updateSettings(CFNotificationCenterRef center,
         [self.grabberView setState:-2]; // Dummy value, will be overwritten in method
     }
 
-
     // Scroll to page
     int page = pagedScrollView.currentPageIndex;
     BOOL animated = NO;
@@ -104,21 +98,19 @@ void updateSettings(CFNotificationCenterRef center,
     }
 
     if (pagedScrollView.currentPageIndex != page) {
-        shouldNotEditAlpha = YES;
         [pagedScrollView scrollToPageAtIndex:page animated:animated];
         pagedScrollView.currentPageIndex = page;
-        shouldNotEditAlpha = NO;
     }
     
     return %orig;
 }
 
 - (void)viewWillAppear:(BOOL)arg {
-    if (![preferences[@"enabled"] boolValue]) {
-        return %orig;
-    }
-
     %orig;
+
+    if (![preferences[@"enabled"] boolValue]) {
+        return;
+    }
 
     if ([preferences[@"HideSearch"] boolValue]) {
         [searchNavBar setHidden:YES];
@@ -142,11 +134,11 @@ void updateSettings(CFNotificationCenterRef center,
 }
 
 - (void)viewDidAppear:(BOOL)arg {
-    if (![preferences[@"enabled"] boolValue]) {
-        return %orig;
-    }
-
     %orig;
+
+    if (![preferences[@"enabled"] boolValue]) {
+        return;
+    }
 
     if ([preferences[@"HideSearch"] boolValue]) {
         [searchNavBar setHidden:YES];
