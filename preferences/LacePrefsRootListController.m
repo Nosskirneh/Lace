@@ -117,6 +117,7 @@
 
 - (void)setPreferenceValue:(id)value specifier:(PSSpecifier *)specifier {
     NSMutableDictionary *preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:prefPath];
+    if (!preferences) preferences = [[NSMutableDictionary alloc] init];
     NSString *key = [specifier propertyForKey:@"key"];
 
     [preferences setObject:value forKey:key];
@@ -167,6 +168,8 @@
         // Enable Chevron icon cell
         [self setCellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:5] enabled:[value boolValue]];
     }
+
+    [preferences writeToFile:prefPath atomically:YES];
 
     CFStringRef post = (CFStringRef)CFBridgingRetain(specifier.properties[@"PostNotification"]);
     CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), post, NULL, NULL, YES);
