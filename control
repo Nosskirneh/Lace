@@ -1,7 +1,7 @@
 Package: se.nosskirneh.lace
 Name: Lace
 Depends: mobilesubstrate
-Version: 1.0-1
+Version: 1.0.1
 Architecture: iphoneos-arm
 Description: NCObey / Leash for iOS 10
 Depiction: https://andreashenriksson.se/repo/depictions/?p=se.nosskirneh.lace

@@ -1,11 +1,3 @@
-@interface SBApplication : NSObject
-- (NSString *)displayIdentifier;
-@end
-
-@interface SpringBoard : UIApplication
-- (SBApplication *)_accessibilityFrontMostApplication;
-@end
-
 @interface SBPagedScrollView : UIScrollView
 @property (assign,nonatomic) unsigned long long currentPageIndex;
 - (BOOL)scrollToPageAtIndex:(unsigned long long)arg1 animated:(BOOL)arg2;
@@ -23,10 +15,10 @@
 @property (nonatomic, retain) NSMutableArray *sections;
 @end
 
-@interface SBSearchEtceteraLayoutView : UIView
+@interface SPUINavigationBar : UIView
 @end
 
-@interface SPUINavigationBar : UIView
+@interface SBSearchEtceteraNavigationController : UIViewController
 @end
 
 
@@ -35,8 +27,8 @@
 static NSDictionary *preferences;
 static SBPagedScrollView *pagedScrollView;
 static NCNotificationChronologicalList *notificationList;
-static SBSearchEtceteraLayoutView *searchLayoutView;
 static SPUINavigationBar *searchNavBar;
+static UIView *layoutContainerView;
 static CGRect orgSearchLayoutViewFrame;
 
 
@@ -101,7 +93,7 @@ void updateSettings(CFNotificationCenterRef center,
         [pagedScrollView scrollToPageAtIndex:page animated:animated];
         pagedScrollView.currentPageIndex = page;
     }
-    
+
     return %orig;
 }
 
@@ -114,45 +106,19 @@ void updateSettings(CFNotificationCenterRef center,
 
     if ([preferences[@"HideSearch"] boolValue]) {
         [searchNavBar setHidden:YES];
-        if (![[((SpringBoard *)[%c(SpringBoard) sharedApplication]) _accessibilityFrontMostApplication] displayIdentifier]) {
-            // SB
-            [searchLayoutView setFrame:CGRectMake(orgSearchLayoutViewFrame.origin.x,
-                                          orgSearchLayoutViewFrame.origin.y - 50,
-                                          orgSearchLayoutViewFrame.size.width,
-                                          orgSearchLayoutViewFrame.size.height + 50)];
-        } else {
-            // APP
-            [searchLayoutView setFrame:CGRectMake(orgSearchLayoutViewFrame.origin.x,
-                                                  orgSearchLayoutViewFrame.origin.y - 30,
+
+        [layoutContainerView setFrame:(CGRectMake(orgSearchLayoutViewFrame.origin.x,
+                                                  orgSearchLayoutViewFrame.origin.y + 20,
                                                   orgSearchLayoutViewFrame.size.width,
-                                                  orgSearchLayoutViewFrame.size.height + 50)];
-        }
+                                                  orgSearchLayoutViewFrame.size.height - 20))];
     } else {
         [searchNavBar setHidden:NO];
-        searchLayoutView.frame = orgSearchLayoutViewFrame;
-    }
-}
-
-- (void)viewDidAppear:(BOOL)arg {
-    %orig;
-
-    if (![preferences[@"enabled"] boolValue]) {
-        return;
-    }
-
-    if ([preferences[@"HideSearch"] boolValue]) {
-        [searchNavBar setHidden:YES];
-        [searchLayoutView setFrame:CGRectMake(orgSearchLayoutViewFrame.origin.x,
-                                              orgSearchLayoutViewFrame.origin.y - 50,
-                                              orgSearchLayoutViewFrame.size.width,
-                                              orgSearchLayoutViewFrame.size.height + 50)];
-    } else {
-        [searchNavBar setHidden:NO];
-        searchLayoutView.frame = orgSearchLayoutViewFrame;
+        layoutContainerView.frame = orgSearchLayoutViewFrame;
     }
 }
 
 %end
+
 
 %hook NCNotificationChronologicalList
 
@@ -175,21 +141,18 @@ void updateSettings(CFNotificationCenterRef center,
 %end
 
 
-// Hide Search bar
-%hook SBSearchEtceteraLayoutView
 
-- (id)initWithFrame:(CGRect)frame {
-    return searchLayoutView = %orig;
-}
+%hook SBSearchEtceteraNavigationController
 
-- (void)setFrame:(CGRect)frame {
+- (void)viewDidLoad {
     %orig;
-    if (frame.size.width == [UIScreen mainScreen].bounds.size.width && CGRectIsEmpty(orgSearchLayoutViewFrame)) {
-        orgSearchLayoutViewFrame = frame;
-    }
+
+    layoutContainerView = self.view;
+    orgSearchLayoutViewFrame = self.view.frame;
 }
 
 %end
+
 
 %hook SPUINavigationBar
 
