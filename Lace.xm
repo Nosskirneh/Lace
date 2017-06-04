@@ -104,6 +104,10 @@ void updateSettings(CFNotificationCenterRef center,
     %orig;
 
     if (![preferences[@"enabled"] boolValue]) {
+        // Restore hidden if tweak is no longer enabled
+        if (searchNavBar.hidden) {
+            [searchNavBar setHidden:NO];
+        }
         return;
     }
 
