@@ -21,6 +21,10 @@
 @interface SBSearchEtceteraNavigationController : UIViewController
 @end
 
+@interface SBSearchEtceteraTodayLayoutContentView : UIView
+@property (nonatomic, assign, readwrite) CGFloat navigationBarTopInset;
+@end
+
 
 #define prefPath [NSString stringWithFormat:@"%@/Library/Preferences/%@", NSHomeDirectory(), @"se.nosskirneh.lace.plist"]
 
@@ -29,7 +33,6 @@ static SBPagedScrollView *pagedScrollView;
 static NCNotificationChronologicalList *notificationList;
 static SPUINavigationBar *searchNavBar;
 static UIView *layoutContainerView;
-static SBSearchEtceteraTodayLayoutContentView *todayContentView;
 
 
 void updateSettings(CFNotificationCenterRef center,
@@ -114,6 +117,20 @@ void updateSettings(CFNotificationCenterRef center,
     } else {
         [searchNavBar setHidden:NO];
     }
+}
+
+%end
+
+
+%hook SBSearchEtceteraTodayLayoutContentView
+
+- (void)setNavigationBarTopInset:(CGFloat)inset {
+    if (self.navigationBarTopInset != 0 && inset != self.navigationBarTopInset &&
+        [preferences[@"enabled"] boolValue] && [preferences[@"HideSearch"] boolValue]) {
+        return;
+    }
+
+    %orig;
 }
 
 %end
