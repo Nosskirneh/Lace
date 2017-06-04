@@ -29,7 +29,7 @@ static SBPagedScrollView *pagedScrollView;
 static NCNotificationChronologicalList *notificationList;
 static SPUINavigationBar *searchNavBar;
 static UIView *layoutContainerView;
-static CGRect orgSearchLayoutViewFrame;
+static SBSearchEtceteraTodayLayoutContentView *todayContentView;
 
 
 void updateSettings(CFNotificationCenterRef center,
@@ -107,13 +107,12 @@ void updateSettings(CFNotificationCenterRef center,
     if ([preferences[@"HideSearch"] boolValue]) {
         [searchNavBar setHidden:YES];
 
-        [layoutContainerView setFrame:(CGRectMake(orgSearchLayoutViewFrame.origin.x,
-                                                  orgSearchLayoutViewFrame.origin.y + 20,
-                                                  orgSearchLayoutViewFrame.size.width,
-                                                  orgSearchLayoutViewFrame.size.height - 20))];
+        [layoutContainerView setFrame:(CGRectMake(layoutContainerView.frame.origin.x,
+                                                  layoutContainerView.frame.origin.y + 20,
+                                                  layoutContainerView.frame.size.width,
+                                                  layoutContainerView.frame.size.height - 20))];
     } else {
         [searchNavBar setHidden:NO];
-        layoutContainerView.frame = orgSearchLayoutViewFrame;
     }
 }
 
@@ -148,7 +147,6 @@ void updateSettings(CFNotificationCenterRef center,
     %orig;
 
     layoutContainerView = self.view;
-    orgSearchLayoutViewFrame = self.view.frame;
 }
 
 %end
