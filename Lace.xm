@@ -123,6 +123,13 @@ void updateSettings(CFNotificationCenterRef center,
     }
 }
 
+- (void)viewWillDisappear:(BOOL)arg {
+    %orig;
+
+    // Unhide in order to be visible in with Spotlight
+    [searchNavBar setHidden:NO];
+}
+
 %end
 
 
