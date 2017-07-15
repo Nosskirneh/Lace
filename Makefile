@@ -1,3 +1,8 @@
+export SDKVERSION=10.1
+export ARCHS = armv7 arm64
+
+TARGET=iphone:clang:10.1:10.1
+
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = Lace

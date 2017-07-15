@@ -11,9 +11,7 @@
 @property (nonatomic,readonly) SBUIChevronView *grabberView;
 @end
 
-@interface NCNotificationChronologicalList : NSObject
-@property (nonatomic, retain) NSMutableArray *sections;
-@end
+
 
 @interface SPUINavigationBar : UIView
 @end
@@ -26,11 +24,22 @@
 @end
 
 
+@protocol NCNotificationSectionList <NSObject>
+@required
+-(unsigned long long)sectionCount;
+@end
+
+
+@interface NCNotificationChronologicalList : NSObject <NCNotificationSectionList>
+@property (nonatomic, retain) NSMutableArray *sections;
+@end
+
+
 #define prefPath [NSString stringWithFormat:@"%@/Library/Preferences/%@", NSHomeDirectory(), @"se.nosskirneh.lace.plist"]
 
 static NSDictionary *preferences;
 static SBPagedScrollView *pagedScrollView;
-static NCNotificationChronologicalList *notificationList;
+static id<NCNotificationSectionList> notificationList;
 static SPUINavigationBar *searchNavBar;
 static UIView *layoutContainerView;
 
@@ -80,7 +89,7 @@ void updateSettings(CFNotificationCenterRef center,
     if ([preferences[@"DefaultSectionEnabled"] boolValue]) {
         page = [preferences[@"DefaultSection"] integerValue];
     } else if ([preferences[@"Automode"] boolValue]) {
-        page = notificationList.sections.count > 0 ? 1 : 0;
+        page = notificationList.sectionCount > 0 ? 1 : 0;
     } else if ([preferences[@"ChangeWhileDragging"] boolValue]) {
         animated = YES;
         CGFloat width = [UIScreen mainScreen].bounds.size.width;
@@ -146,6 +155,15 @@ void updateSettings(CFNotificationCenterRef center,
 
 %end
 
+
+%hook NCNotificationSectionListViewController
+
+-(void)setSectionList:(id)arg1 {
+    %orig;
+    notificationList = arg1;
+}
+
+%end
 
 %hook NCNotificationChronologicalList
 

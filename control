@@ -1,9 +1,11 @@
 Package: se.nosskirneh.lace
 Name: Lace
-Depends: mobilesubstrate
-Version: 1.0.3
+Depends: firmware (>= 10.0), mobilesubstrate, preferenceloader
+Version: 1.0.4
 Architecture: iphoneos-arm
 Description: NCObey / Leash for iOS 10
+Change Log
+	+ Update dependencies. Add support for NCLink10 tweak.
 Depiction: https://andreashenriksson.se/repo/depictions/?p=se.nosskirneh.lace
 Maintainer: Andreas Henriksson
 Author: Andreas Henriksson
