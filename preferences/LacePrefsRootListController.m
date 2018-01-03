@@ -13,11 +13,11 @@
 @implementation LacePrefsRootListController
 
 - (NSArray *)specifiers {
-	if (!_specifiers) {
-		_specifiers = [[self loadSpecifiersFromPlistName:@"Root" target:self] retain];
-	}
+    if (!_specifiers) {
+        _specifiers = [[self loadSpecifiersFromPlistName:@"Root" target:self] retain];
+    }
 
-	return _specifiers;
+    return _specifiers;
 }
 
 - (void)viewWillAppear:(BOOL)animated {

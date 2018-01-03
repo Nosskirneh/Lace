@@ -2,9 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>items</key>
-	<array>
-		<!-- Header -->
+    <key>items</key>
+    <array>
+        <!-- Header -->
         <dict>
             <key>cell</key>
             <string>PSGroupCell</string>
@@ -13,11 +13,11 @@
         </dict>
 
 
-		<!-- Enable -->
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-		</dict>
+        <!-- Enable -->
+        <dict>
+            <key>cell</key>
+            <string>PSGroupCell</string>
+        </dict>
 
         <dict>
             <key>cell</key>
@@ -54,15 +54,15 @@
         </dict>
 
 
-		<!-- Change while dragging -->
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
+        <!-- Change while dragging -->
+        <dict>
+            <key>cell</key>
+            <string>PSGroupCell</string>
             <key>footerAlignment</key>
             <integer>0</integer>
             <key>footerText</key>
             <string>Changes the selected section even when you're in the act of dragging.</string>
-		</dict>
+        </dict>
 
         <dict>
             <key>cell</key>
@@ -82,17 +82,17 @@
         </dict>
 
 
-		<!-- Auto-mode -->
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Automode</string>
+        <!-- Auto-mode -->
+        <dict>
+            <key>cell</key>
+            <string>PSGroupCell</string>
+            <key>label</key>
+            <string>Automode</string>
             <key>footerAlignment</key>
             <integer>0</integer>
             <key>footerText</key>
             <string>Open Today view if there are no pending notifications. Overrides "Change While Dragging".</string>
-		</dict>
+        </dict>
 
         <dict>
             <key>cell</key>
@@ -113,16 +113,16 @@
 
 
         <!-- Default Section -->
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Default section</string>
+        <dict>
+            <key>cell</key>
+            <string>PSGroupCell</string>
+            <key>label</key>
+            <string>Default section</string>
             <key>footerAlignment</key>
             <integer>0</integer>
             <key>footerText</key>
             <string>Will always open NC to selected section. Overrides all other modes.</string>
-		</dict>
+        </dict>
 
         <dict>
             <key>cell</key>
@@ -154,16 +154,16 @@
             <string>readPreferenceValue:</string>
             <key>set</key>
             <string>setPreferenceValue:specifier:</string>
-			<key>validTitles</key>
-			<array>
-				<string>Today</string>
-				<string>Notifications</string>
-			</array>
-			<key>validValues</key>
-			<array>
-				<string>0</string>
-				<string>1</string>
-			</array>
+            <key>validTitles</key>
+            <array>
+                <string>Today</string>
+                <string>Notifications</string>
+            </array>
+            <key>validValues</key>
+            <array>
+                <string>0</string>
+                <string>1</string>
+            </array>
             <key>default</key>
             <string>0</string>
             <key>label</key>
@@ -259,8 +259,8 @@
             <key>footerText</key>
             <string>Made by Andreas Henriksson</string>
         </dict>
-	</array>
-	<key>title</key>
-	<string></string>
+    </array>
+    <key>title</key>
+    <string></string>
 </dict>
 </plist>
