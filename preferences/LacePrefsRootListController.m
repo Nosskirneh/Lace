@@ -4,6 +4,13 @@
 
 #define prefPath [NSString stringWithFormat:@"%@/Library/Preferences/%@", NSHomeDirectory(), @"se.nosskirneh.lace.plist"]
 #define LaceColor [UIColor colorWithRed:0.73 green:0.06 blue:0.58 alpha:1.0]
+#define BatteryUsageUIBundle [NSBundle bundleWithPath:@"/System/Library/PreferenceBundles/BatteryUsageUI.bundle/"]
+
+
+@interface UIImage (Private)
++ (id)imageNamed:(id)arg1 inBundle:(id)arg2;
+@end
+
 
 @interface LacePrefsRootListController : PSListController {
     UIWindow *settingsView;
@@ -16,6 +23,15 @@
     if (!_specifiers) {
         _specifiers = [[self loadSpecifiersFromPlistName:@"Root" target:self] retain];
     }
+
+    // Set icons for groups
+    PSSpecifier *spec = _specifiers[1];
+    UIImage *img = [UIImage imageNamed:@"NotificationCenter.png" inBundle:BatteryUsageUIBundle];
+    [spec setProperty:img forKey:@"iconImage"];
+
+    spec = _specifiers[2];
+    img = [UIImage imageNamed:@"ControlCenter.png" inBundle:BatteryUsageUIBundle];
+    [spec setProperty:img forKey:@"iconImage"];
 
     return _specifiers;
 }
