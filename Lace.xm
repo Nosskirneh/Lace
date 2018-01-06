@@ -37,7 +37,7 @@
 
 #define prefPath [NSString stringWithFormat:@"%@/Library/Preferences/%@", NSHomeDirectory(), @"se.nosskirneh.lace.plist"]
 
-static NSDictionary *preferences;
+static NSDictionary *prefs;
 static SBPagedScrollView *pagedScrollView;
 static id<NCNotificationSectionList> notificationList;
 static SPUINavigationBar *searchNavBar;
@@ -49,7 +49,7 @@ void updateSettings(CFNotificationCenterRef center,
                     CFStringRef name,
                     const void *object,
                     CFDictionaryRef userInfo) {
-    preferences = [[NSDictionary alloc] initWithContentsOfFile:prefPath];
+    prefs = [[NSDictionary alloc] initWithContentsOfFile:prefPath];
 }
 
 
@@ -57,13 +57,12 @@ void updateSettings(CFNotificationCenterRef center,
 %hook SBUIChevronView
 
 - (void)setState:(long long)state {
-    if (![preferences[@"enabled"] boolValue] ||
-        ![preferences[@"CustomChevronIconEnabled"] boolValue] ||
-        !preferences[@"CustomChevronIcon"]) {
+    if ((prefs[@"enabled"] && ![prefs[@"enabled"] boolValue]) ||
+        ![prefs[@"CustomChevronIconEnabled"] boolValue]) {
         return %orig;
     }
 
-    %orig([preferences[@"CustomChevronIcon"] integerValue]);
+    %orig([prefs[@"CustomChevronIcon"] integerValue]);
 }
 
 %end
@@ -77,24 +76,24 @@ void updateSettings(CFNotificationCenterRef center,
 }
 
 - (BOOL)shouldPlayFeedbackForNewTouchLocation:(CGPoint)point velocity:(CGPoint)speed {
-    if (preferences[@"enabled"] && ![preferences[@"enabled"] boolValue])
+    if (prefs[@"enabled"] && ![prefs[@"enabled"] boolValue])
         return %orig;
 
     // Set custom chevron state
-    if ([preferences[@"CustomChevronIconEnabled"] boolValue] &&
-        preferences[@"CustomChevronIcon"])
+    if ([prefs[@"CustomChevronIconEnabled"] boolValue] &&
+        prefs[@"CustomChevronIcon"])
         [self.grabberView setState:-2]; // Dummy value, will be overwritten in method
 
     // Scroll to page
     int page = pagedScrollView.currentPageIndex;
     BOOL animated = NO;
 
-    if ([preferences[@"DefaultSectionEnabled"] boolValue]) {
-        page = [preferences[@"DefaultSection"] integerValue];
-    } else if ([preferences[@"Automode"] boolValue]) {
+    if ([prefs[@"DefaultSectionEnabled"] boolValue]) {
+        page = [prefs[@"DefaultSection"] integerValue];
+    } else if ([prefs[@"Automode"] boolValue]) {
         page = notificationList.sectionCount > 0 ? 1 : 0;
-    } else if (!preferences[@"ChangeWhileDragging"] ||
-               [preferences[@"ChangeWhileDragging"] boolValue]) {
+    } else if (!prefs[@"ChangeWhileDragging"] ||
+               [prefs[@"ChangeWhileDragging"] boolValue]) {
         animated = YES;
         CGFloat width = [UIScreen mainScreen].bounds.size.width;
 
@@ -116,15 +115,14 @@ void updateSettings(CFNotificationCenterRef center,
 - (void)viewWillAppear:(BOOL)arg {
     %orig;
 
-    if (![preferences[@"enabled"] boolValue]) {
+    if (prefs[@"enabled"] && ![prefs[@"enabled"] boolValue] &&
+        searchNavBar.hidden) {
         // Restore hidden if tweak is no longer enabled
-        if (searchNavBar.hidden) {
-            [searchNavBar setHidden:NO];
-        }
+        [searchNavBar setHidden:NO];
         return;
     }
 
-    if ([preferences[@"HideSearch"] boolValue]) {
+    if ([prefs[@"HideSearch"] boolValue]) {
         [searchNavBar setHidden:YES];
 
         [layoutContainerView setFrame:(CGRectMake(layoutContainerView.frame.origin.x,
@@ -139,7 +137,7 @@ void updateSettings(CFNotificationCenterRef center,
 - (void)viewWillDisappear:(BOOL)arg {
     %orig;
 
-    // Unhide in order to be visible in with Spotlight
+    // Unhide in order to be visible with Spotlight
     [searchNavBar setHidden:NO];
 }
 
@@ -151,8 +149,8 @@ void updateSettings(CFNotificationCenterRef center,
 - (void)setNavigationBarTopInset:(CGFloat)inset {
     if (self.navigationBarTopInset != 0 &&
         inset != self.navigationBarTopInset &&
-        [preferences[@"enabled"] boolValue] &&
-        [preferences[@"HideSearch"] boolValue]) {
+        prefs[@"enabled"] && [prefs[@"enabled"] boolValue] &&
+        [prefs[@"HideSearch"] boolValue]) {
         return;
     }
 
@@ -164,7 +162,7 @@ void updateSettings(CFNotificationCenterRef center,
 
 %hook NCNotificationSectionListViewController
 
--(void)setSectionList:(id)arg1 {
+- (void)setSectionList:(id)arg1 {
     %orig;
     notificationList = arg1;
 }
@@ -227,19 +225,19 @@ void updateSettings(CFNotificationCenterRef center,
 }
 
 - (void)_updateTransitionWithTouchLocation:(CGPoint)point velocity:(CGPoint)velocity {
-    if (preferences[@"enabledCC"] && ![preferences[@"enabledCC"] boolValue])
+    if (prefs[@"enabledCC"] && ![prefs[@"enabledCC"] boolValue])
         return %orig;
 
     // Scroll to page
     int page = -1;
     BOOL animated = NO;
 
-    if ([preferences[@"DefaultSectionEnabledCC"] boolValue]) {
-        page = [preferences[@"DefaultSectionCC"] integerValue];
-    } else if ([preferences[@"AutomodeCC"] boolValue]) {
+    if ([prefs[@"DefaultSectionEnabledCC"] boolValue]) {
+        page = [prefs[@"DefaultSectionCC"] integerValue];
+    } else if ([prefs[@"AutomodeCC"] boolValue]) {
         page = [[%c(SBMediaController) sharedInstance] nowPlayingApplication] ? 1 : 0;
-    } else if (!preferences[@"ChangeWhileDraggingCC"] ||
-               [preferences[@"ChangeWhileDraggingCC"] boolValue]) {
+    } else if (!prefs[@"ChangeWhileDraggingCC"] ||
+               [prefs[@"ChangeWhileDraggingCC"] boolValue]) {
         animated = YES;
         CGFloat width = [UIScreen mainScreen].bounds.size.width;
         page = point.x / width * [self numberOfActivePages];
@@ -258,8 +256,8 @@ void updateSettings(CFNotificationCenterRef center,
 
 %ctor {
     // Init settings file
-    preferences = [[NSDictionary alloc] initWithContentsOfFile:prefPath];
-    if (!preferences) preferences = [[NSMutableDictionary alloc] init];
+    prefs = [[NSDictionary alloc] initWithContentsOfFile:prefPath];
+    if (!prefs) prefs = [[NSMutableDictionary alloc] init];
 
     // Add observer to update settings    
     CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &updateSettings, CFStringRef(@"se.nosskirneh.lace/preferencesChanged"), NULL, 0);

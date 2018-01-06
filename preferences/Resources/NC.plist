@@ -216,7 +216,7 @@
                 <string>1</string>
             </array>
             <key>default</key>
-            <string>1</string>
+            <string>0</string>
             <key>label</key>
             <string>Icon</string>
             <key>PostNotification</key>
