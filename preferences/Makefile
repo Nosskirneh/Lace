@@ -1,7 +1,9 @@
+TARGET = iphone:clang:9.2
+
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = LacePrefs
-LacePrefs_FILES = $(wildcard *.m) $(wildcard *.x)
+LacePrefs_FILES = $(wildcard *.m)
 LacePrefs_INSTALL_PATH = /Library/PreferenceBundles
 LacePrefs_FRAMEWORKS = UIKit
 LacePrefs_PRIVATE_FRAMEWORKS = Preferences

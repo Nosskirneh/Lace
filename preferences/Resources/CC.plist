@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>items</key>
+    <array>
+        <!-- Enable -->
+        <dict>
+            <key>cell</key>
+            <string>PSGroupCell</string>
+        </dict>
+
+        <dict>
+            <key>cell</key>
+            <string>PSSwitchCell</string>
+            <key>cellClass</key>
+            <string>LaceSwitchTableCell</string>
+            <key>default</key>
+            <true/>
+            <key>defaults</key>
+            <string>se.nosskirneh.lace</string>
+            <key>key</key>
+            <string>enabledCC</string>
+            <key>label</key>
+            <string>Enabled</string>
+            <key>PostNotification</key>
+            <string>se.nosskirneh.lace/preferencesChanged</string>
+        </dict>
+
+
+        <!-- Change while dragging -->
+        <dict>
+            <key>cell</key>
+            <string>PSGroupCell</string>
+            <key>footerAlignment</key>
+            <integer>0</integer>
+            <key>footerText</key>
+            <string>Changes the selected section even when you're in the act of dragging.</string>
+        </dict>
+
+        <dict>
+            <key>cell</key>
+            <string>PSSwitchCell</string>
+            <key>cellClass</key>
+            <string>LaceSwitchTableCell</string>
+            <key>default</key>
+            <true/>
+            <key>defaults</key>
+            <string>se.nosskirneh.lace</string>
+            <key>key</key>
+            <string>ChangeWhileDraggingCC</string>
+            <key>label</key>
+            <string>Change While Dragging</string>
+            <key>PostNotification</key>
+            <string>se.nosskirneh.lace/preferencesChanged</string>
+        </dict>
+
+
+        <!-- Auto-mode -->
+        <dict>
+            <key>cell</key>
+            <string>PSGroupCell</string>
+            <key>label</key>
+            <string>Automode</string>
+            <key>footerAlignment</key>
+            <integer>0</integer>
+            <key>footerText</key>
+            <string>Open Toggles view if there are no media playing. Overrides "Change While Dragging".</string>
+        </dict>
+
+        <dict>
+            <key>cell</key>
+            <string>PSSwitchCell</string>
+            <key>cellClass</key>
+            <string>LaceSwitchTableCell</string>
+            <key>default</key>
+            <false/>
+            <key>defaults</key>
+            <string>se.nosskirneh.lace</string>
+            <key>key</key>
+            <string>AutomodeCC</string>
+            <key>label</key>
+            <string>Enabled</string>
+            <key>PostNotification</key>
+            <string>se.nosskirneh.lace/preferencesChanged</string>
+        </dict>
+
+
+        <!-- Default Section -->
+        <dict>
+            <key>cell</key>
+            <string>PSGroupCell</string>
+            <key>label</key>
+            <string>Default section</string>
+            <key>footerAlignment</key>
+            <integer>0</integer>
+            <key>footerText</key>
+            <string>Will always open CC to selected section. Overrides all other modes.</string>
+        </dict>
+
+        <dict>
+            <key>cell</key>
+            <string>PSSwitchCell</string>
+            <key>cellClass</key>
+            <string>LaceSwitchTableCell</string>
+            <key>default</key>
+            <false/>
+            <key>defaults</key>
+            <string>se.nosskirneh.lace</string>
+            <key>key</key>
+            <string>DefaultSectionEnabledCC</string>
+            <key>label</key>
+            <string>Enabled</string>
+            <key>PostNotification</key>
+            <string>se.nosskirneh.lace/preferencesChanged</string>
+        </dict>
+
+        <dict>
+            <key>cell</key>
+            <string>PSLinkListCell</string>
+            <key>key</key>
+            <string>DefaultSectionCC</string>
+            <key>defaults</key>
+            <string>se.nosskirneh.lace</string>
+            <key>detail</key>
+            <string>LaceColorListItemsController</string>
+            <key>get</key>
+            <string>readPreferenceValue:</string>
+            <key>set</key>
+            <string>setPreferenceValue:specifier:</string>
+            <key>validTitles</key>
+            <array>
+                <string>Toggles</string>
+                <string>Media</string>
+            </array>
+            <key>validValues</key>
+            <array>
+                <string>0</string>
+                <string>1</string>
+            </array>
+            <key>default</key>
+            <string>0</string>
+            <key>label</key>
+            <string>Section</string>
+            <key>PostNotification</key>
+            <string>se.nosskirneh.lace/preferencesChanged</string>
+        </dict>
+    </array>
+    <key>title</key>
+    <string>Control Center</string>
+</dict>
+</plist>
