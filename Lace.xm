@@ -1,3 +1,7 @@
+#import <SpringBoard/SBMediaController.h>
+#import <SpringBoard/SBControlCenterController.h>
+#import <SpringBoard/SBControlCenterViewController.h>
+
 @interface SBPagedScrollView : UIScrollView
 @property (assign,nonatomic) unsigned long long currentPageIndex;
 - (BOOL)scrollToPageAtIndex:(unsigned long long)arg1 animated:(BOOL)arg2;
@@ -52,6 +56,8 @@ void updateSettings(CFNotificationCenterRef center,
     preferences = [[NSDictionary alloc] initWithContentsOfFile:prefPath];
 }
 
+
+/* Notification Centre */
 %hook SBUIChevronView
 
 - (void)setState:(long long)state {
@@ -202,6 +208,50 @@ void updateSettings(CFNotificationCenterRef center,
 
 - (id)initWithFrame:(CGRect)frame {
     return searchNavBar = %orig;
+}
+
+%end
+
+
+/* Control Centre */
+@interface SBControlCenterController (Addition)
+@property (nonatomic, assign) NSInteger currentPage;
+@end
+
+%hook SBControlCenterController
+
+%property (nonatomic, assign) NSInteger currentPage;
+
+- (void)setPresented:(BOOL)presented {
+    %orig;
+    self.currentPage = -2;
+}
+
+- (void)_updateTransitionWithTouchLocation:(CGPoint)point velocity:(CGPoint)velocity {
+    if (preferences[@"enabledCC"] && ![preferences[@"enabledCC"] boolValue])
+        return %orig;
+
+    // Scroll to page
+    int page = -1;
+    BOOL animated = NO;
+
+    if ([preferences[@"DefaultSectionEnabledCC"] boolValue]) {
+        page = [preferences[@"DefaultSectionCC"] integerValue];
+    } else if ([preferences[@"AutomodeCC"] boolValue]) {
+        page = [[%c(SBMediaController) sharedInstance] nowPlayingApplication] ? 1 : 0;
+    } else if (!preferences[@"ChangeWhileDraggingCC"] ||
+               [preferences[@"ChangeWhileDraggingCC"] boolValue]) {
+        animated = YES;
+        CGFloat width = [UIScreen mainScreen].bounds.size.width;
+        page = point.x / width * [self numberOfActivePages];
+    }
+
+    if (page != -1 && self.currentPage != page) {
+        [self scrollToPage:page animated:animated withCompletion:nil];
+        self.currentPage = page;
+    }
+
+    %orig;
 }
 
 %end
