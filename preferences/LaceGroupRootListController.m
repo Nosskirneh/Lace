@@ -110,12 +110,10 @@
     NSDictionary *preferences = [NSDictionary dictionaryWithContentsOfFile:prefPath];
 
     NSString *key = [specifier propertyForKey:@"key"];
-    if (!preferences[key]) {
-        return specifier.properties[@"default"];
-    }
+    BOOL enableCell = [preferences[key] boolValue];
 
-    BOOL enableCell = [[preferences objectForKey:key] boolValue];
     if ([key isEqualToString:[self kEnabled]]) {
+        enableCell = preferences[key] ? enableCell : YES;
         // Hide Search Bar
         [self setCellForRowAtIndexPath:[self hideSearchBarIndexPath] enabled:enableCell];
 
@@ -167,6 +165,9 @@
         }
     }
 
+    if (!preferences[key]) {
+        return specifier.properties[@"default"];
+    }
     return preferences[key];
 }
 
