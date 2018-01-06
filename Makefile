@@ -1,3 +1,5 @@
+TARGET = iphone:clang:10.1
+
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = Lace
