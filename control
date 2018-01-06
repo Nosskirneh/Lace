@@ -1,9 +1,9 @@
 Package: se.nosskirneh.lace
 Name: Lace
 Depends: firmware (>= 10.0), mobilesubstrate, preferenceloader
-Version: 1.0.4
+Version: 1.1.0
 Architecture: iphoneos-arm
-Description: NCObey / Leash for iOS 10
+Description: Control NC and CC with ease
 Maintainer: Andreas Henriksson
 Author: Andreas Henriksson
 Section: Tweaks
