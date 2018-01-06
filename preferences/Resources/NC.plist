@@ -27,6 +27,7 @@
             <string>se.nosskirneh.lace/preferencesChanged</string>
         </dict>
 
+        <!-- Hide search bar -->
         <dict>
             <key>cell</key>
             <string>PSSwitchCell</string>
@@ -61,7 +62,7 @@
             <key>cellClass</key>
             <string>LaceSwitchTableCell</string>
             <key>default</key>
-            <false/>
+            <true/>
             <key>defaults</key>
             <string>se.nosskirneh.lace</string>
             <key>key</key>
