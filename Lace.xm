@@ -15,8 +15,6 @@
 @property (nonatomic,readonly) SBUIChevronView *grabberView;
 @end
 
-
-
 @interface SPUINavigationBar : UIView
 @end
 
@@ -27,12 +25,10 @@
 @property (nonatomic, assign, readwrite) CGFloat navigationBarTopInset;
 @end
 
-
 @protocol NCNotificationSectionList <NSObject>
 @required
 -(unsigned long long)sectionCount;
 @end
-
 
 @interface NCNotificationChronologicalList : NSObject <NCNotificationSectionList>
 @property (nonatomic, retain) NSMutableArray *sections;
@@ -61,7 +57,9 @@ void updateSettings(CFNotificationCenterRef center,
 %hook SBUIChevronView
 
 - (void)setState:(long long)state {
-    if (![preferences[@"enabled"] boolValue] || ![preferences[@"CustomChevronIconEnabled"] boolValue] || !preferences[@"CustomChevronIcon"]) {
+    if (![preferences[@"enabled"] boolValue] ||
+        ![preferences[@"CustomChevronIconEnabled"] boolValue] ||
+        !preferences[@"CustomChevronIcon"]) {
         return %orig;
     }
 
@@ -79,14 +77,13 @@ void updateSettings(CFNotificationCenterRef center,
 }
 
 - (BOOL)shouldPlayFeedbackForNewTouchLocation:(CGPoint)point velocity:(CGPoint)speed {
-    if (![preferences[@"enabled"] boolValue]) {
+    if (preferences[@"enabled"] && ![preferences[@"enabled"] boolValue])
         return %orig;
-    }
 
-    // Set custom state
-    if ([preferences[@"CustomChevronIconEnabled"] boolValue] && preferences[@"CustomChevronIcon"]) {
+    // Set custom chevron state
+    if ([preferences[@"CustomChevronIconEnabled"] boolValue] &&
+        preferences[@"CustomChevronIcon"])
         [self.grabberView setState:-2]; // Dummy value, will be overwritten in method
-    }
 
     // Scroll to page
     int page = pagedScrollView.currentPageIndex;
@@ -96,7 +93,8 @@ void updateSettings(CFNotificationCenterRef center,
         page = [preferences[@"DefaultSection"] integerValue];
     } else if ([preferences[@"Automode"] boolValue]) {
         page = notificationList.sectionCount > 0 ? 1 : 0;
-    } else if ([preferences[@"ChangeWhileDragging"] boolValue]) {
+    } else if (!preferences[@"ChangeWhileDragging"] ||
+               [preferences[@"ChangeWhileDragging"] boolValue]) {
         animated = YES;
         CGFloat width = [UIScreen mainScreen].bounds.size.width;
 
@@ -151,8 +149,10 @@ void updateSettings(CFNotificationCenterRef center,
 %hook SBSearchEtceteraTodayLayoutContentView
 
 - (void)setNavigationBarTopInset:(CGFloat)inset {
-    if (self.navigationBarTopInset != 0 && inset != self.navigationBarTopInset &&
-        [preferences[@"enabled"] boolValue] && [preferences[@"HideSearch"] boolValue]) {
+    if (self.navigationBarTopInset != 0 &&
+        inset != self.navigationBarTopInset &&
+        [preferences[@"enabled"] boolValue] &&
+        [preferences[@"HideSearch"] boolValue]) {
         return;
     }
 
@@ -190,7 +190,6 @@ void updateSettings(CFNotificationCenterRef center,
 }
 
 %end
-
 
 
 %hook SBSearchEtceteraNavigationController
