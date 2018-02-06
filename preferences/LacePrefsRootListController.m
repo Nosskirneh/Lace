@@ -1,15 +1,12 @@
 #import <Preferences/PSListController.h>
 #import <Preferences/PSControlTableCell.h>
 #import <Preferences/PSSpecifier.h>
+#import "UIImage.h"
 
 #define prefPath [NSString stringWithFormat:@"%@/Library/Preferences/%@", NSHomeDirectory(), @"se.nosskirneh.lace.plist"]
 #define LaceColor [UIColor colorWithRed:0.73 green:0.06 blue:0.58 alpha:1.0]
-#define BatteryUsageUIBundle [NSBundle bundleWithPath:@"/System/Library/PreferenceBundles/BatteryUsageUI.bundle/"]
-
-
-@interface UIImage (Private)
-+ (id)imageNamed:(id)arg1 inBundle:(id)arg2;
-@end
+#define batteryUsageUIBundle [NSBundle bundleWithPath:@"/System/Library/PreferenceBundles/BatteryUsageUI.bundle/"]
+#define preferencesFrameworkBundle [NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/Preferences.framework/"]
 
 
 @interface LacePrefsRootListController : PSListController {
@@ -26,11 +23,17 @@
 
     // Set icons for groups
     PSSpecifier *spec = _specifiers[1];
-    UIImage *img = [UIImage imageNamed:@"NotificationCenter.png" inBundle:BatteryUsageUIBundle];
+    UIImage *img = [UIImage imageNamed:@"NotificationCenter.png" inBundle:batteryUsageUIBundle];
     [spec setProperty:img forKey:@"iconImage"];
 
     spec = _specifiers[2];
-    img = [UIImage imageNamed:@"ControlCenter.png" inBundle:BatteryUsageUIBundle];
+    img = [UIImage imageNamed:@"ControlCenter.png" inBundle:batteryUsageUIBundle];
+    [spec setProperty:img forKey:@"iconImage"];
+
+    spec = _specifiers[3];
+    img = [UIImage imageNamed:@"Passcode.png" inBundle:preferencesFrameworkBundle];
+    // Brightening it enough to not see any difference
+    img = [[img convertToGrayscale] tintedImageWithColor:UIColor.whiteColor level:0.25f];
     [spec setProperty:img forKey:@"iconImage"];
 
     return _specifiers;
@@ -97,4 +100,5 @@
     // Return a custom cell height.
     return 140.f;
 }
+
 @end

@@ -253,6 +253,50 @@ void updateSettings(CFNotificationCenterRef center,
 
 %end
 
+/* Lockscreen */
+@interface SBDashBoardNotificationListViewController : UIViewController
+@property(readonly, nonatomic) BOOL hasContent;
+@end
+
+@interface SBDashBoardMainPageContentViewController : UIViewController
+@property(readonly, nonatomic) SBDashBoardNotificationListViewController *notificationListViewController;
+@end
+
+@interface SBDashBoardMainPageViewController : UIViewController
+@property (nonatomic, assign) SBDashBoardMainPageContentViewController *contentViewController;
+@end
+
+@interface SBDashBoardPageViewBase : UIView
+@property (nonatomic, assign) SBDashBoardMainPageViewController *pageViewController;
+@end
+
+@interface SBDashBoardView : UIView
+@property (nonatomic, readwrite, assign) SBDashBoardPageViewBase *mainPageView;
+- (BOOL)scrollToPageAtIndex:(unsigned long long)arg1 animated:(BOOL)arg2 withCompletion:(id)arg3;
+@end
+
+%hook SBDashBoardView
+
+- (BOOL)resetScrollViewToMainPageAnimated:(BOOL)arg1 withCompletion:(id)arg2 {
+    if (prefs[@"enabledLS"] && ![prefs[@"enabledLS"] boolValue])
+        return %orig;
+
+    int page = MSHookIvar<int>(self, "_initialPageIndex");
+
+    if ([prefs[@"DefaultSectionEnabledLS"] boolValue]){
+        page = [prefs[@"DefaultSectionLS"] integerValue];
+    } else if (prefs[@"AutomodeLS"]) {
+        // Are notifications present?
+        BOOL hasContent = self.mainPageView.pageViewController.contentViewController.notificationListViewController.hasContent;
+        if (!hasContent) {
+            page = 0;
+        }
+    }
+    [self scrollToPageAtIndex:page animated:NO withCompletion:nil];
+    return YES;
+}
+
+%end
 
 %ctor {
     // Init settings file

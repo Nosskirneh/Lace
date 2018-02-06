@@ -35,6 +35,17 @@
             <string>Control Center</string>
         </dict>
 
+        <dict>
+            <key>cell</key>
+            <string>PSLinkCell</string>
+            <key>detail</key>
+            <string>LaceLSRootListController</string>
+            <key>isController</key>
+            <true/>
+            <key>label</key>
+            <string>Lockscreen</string>
+        </dict>
+
 
         <!-- About -->
         <dict>

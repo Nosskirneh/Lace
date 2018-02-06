@@ -4,6 +4,7 @@
 @end
 
 @implementation LaceCCRootListController
+
 // Keys
 - (NSString *)specifiersPlistFilename {
     return @"CC";
