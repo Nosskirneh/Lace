@@ -29,4 +29,11 @@ You can choose to display the Media page if and only if any media is playing, an
 <b>Default section:</b><br />
 Choose to always show the Toggles page or the Media page.
 
+### Lockscreen
+<b>Automode:</b><br />
+You can choose to display the Main page if and only if any notification is present, and otherwise show the Today page.
+
+<b>Default section:</b><br />
+Choose to always show the Main page or the Today page.
+
 <img src="http://moreinfo.thebigboss.org/moreinfo/lace2.jpg" alt="Screenshot" width="360">&nbsp;<img src="http://moreinfo.thebigboss.org/moreinfo/lace1.jpg" alt="Screenshot" width="360">
