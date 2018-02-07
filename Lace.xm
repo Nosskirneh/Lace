@@ -281,9 +281,9 @@ void updateSettings(CFNotificationCenterRef center,
     if (prefs[@"enabledLS"] && ![prefs[@"enabledLS"] boolValue])
         return %orig;
 
-    int page = MSHookIvar<int>(self, "_initialPageIndex");
+    int page = 1;
 
-    if ([prefs[@"DefaultSectionEnabledLS"] boolValue]){
+    if ([prefs[@"DefaultSectionEnabledLS"] boolValue]) {
         page = [prefs[@"DefaultSectionLS"] integerValue];
     } else if (prefs[@"AutomodeLS"]) {
         // Are notifications present?
