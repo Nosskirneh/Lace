@@ -3,7 +3,7 @@
 #import <SpringBoard/SBControlCenterViewController.h>
 
 @interface SBPagedScrollView : UIScrollView
-@property (assign,nonatomic) unsigned long long currentPageIndex;
+@property (assign, nonatomic) unsigned long long currentPageIndex;
 - (BOOL)scrollToPageAtIndex:(unsigned long long)arg1 animated:(BOOL)arg2;
 @end
 
@@ -12,7 +12,7 @@
 @end
 
 @interface SBNotificationCenterViewController : UIViewController
-@property (nonatomic,readonly) SBUIChevronView *grabberView;
+@property (nonatomic, readonly) SBUIChevronView *grabberView;
 @end
 
 @interface SPUINavigationBar : UIView
@@ -27,7 +27,7 @@
 
 @protocol NCNotificationSectionList <NSObject>
 @required
--(unsigned long long)sectionCount;
+- (unsigned long long)sectionCount;
 @end
 
 @interface NCNotificationChronologicalList : NSObject <NCNotificationSectionList>
@@ -58,9 +58,8 @@ void updateSettings(CFNotificationCenterRef center,
 
 - (void)setState:(long long)state {
     if ((prefs[@"enabled"] && ![prefs[@"enabled"] boolValue]) ||
-        ![prefs[@"CustomChevronIconEnabled"] boolValue]) {
+        ![prefs[@"CustomChevronIconEnabled"] boolValue])
         return %orig;
-    }
 
     %orig([prefs[@"CustomChevronIcon"] integerValue]);
 }
@@ -97,11 +96,10 @@ void updateSettings(CFNotificationCenterRef center,
         animated = YES;
         CGFloat width = [UIScreen mainScreen].bounds.size.width;
 
-        if (point.x < width / 2.0f) { // Left
+        if (point.x < width / 2.0f) // Left
             page = 0;
-        } else { // Right
+        else // Right
             page = 1;
-        }
     }
 
     if (pagedScrollView.currentPageIndex != page) {
@@ -181,9 +179,8 @@ void updateSettings(CFNotificationCenterRef center,
 %hook SBPagedScrollView
 
 - (id)initWithFrame:(CGRect)frame {
-    if (!pagedScrollView && CGRectIsEmpty(frame)) {
+    if (!pagedScrollView && CGRectIsEmpty(frame))
         return pagedScrollView = %orig;
-    }
     return %orig;
 }
 
@@ -285,12 +282,11 @@ void updateSettings(CFNotificationCenterRef center,
 
     if ([prefs[@"DefaultSectionEnabledLS"] boolValue]) {
         page = [prefs[@"DefaultSectionLS"] integerValue];
-    } else if (prefs[@"AutomodeLS"]) {
+    } else if ([prefs[@"AutomodeLS"] boolValue]) {
         // Are notifications present?
         BOOL hasContent = self.mainPageView.pageViewController.contentViewController.notificationListViewController.hasContent;
-        if (!hasContent) {
+        if (!hasContent)
             page = 0;
-        }
     }
     [self scrollToPageAtIndex:page animated:NO withCompletion:nil];
     return YES;
